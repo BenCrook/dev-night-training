@@ -1,0 +1,21 @@
+.container {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    margin: 0 auto;
+    max-width: var(--layout-max-width);
+    justify-content: center;
+    position: relative;
+    z-index: 9;
+}
+
+nav {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.link {
+    padding: 25px 10px;
+}

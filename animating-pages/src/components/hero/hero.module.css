@@ -1,0 +1,65 @@
+.container {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.image {
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.content {
+    color: var(--color-white);
+    margin: 0 auto;
+    max-width: var(--layout-max-width);
+    position: relative;
+    height: 500px;
+}
+
+.text,
+.arrows,
+.links {
+    position: absolute;
+}
+
+.text {
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-size: 30px;
+    font-weight: bold;
+    padding: 10px 20px;
+    top: 100px;
+    left: 0;
+}
+
+.arrows {
+    cursor: pointer;
+    left: 0;
+    top: 300px;
+}
+
+.links {
+    bottom: 0;
+    right: 0;
+}
+
+.arrow {
+    background: red;
+    color: white;
+}
+
+.next {
+
+}
+
+.prev {
+
+}

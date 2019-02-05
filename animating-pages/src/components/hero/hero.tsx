@@ -1,12 +1,27 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import anime from 'animejs';
-import styles from './hero.module.css'
-import initialBannerImage from './images/alireza-khajehali-1.jpg'
-import secondBannerImage from './images/sunset-mountain.jpg'
-import thirdBannerImage from './images/snow-mountain-2.jpg'
-import fourthBannerImage from './images/snow-mountain-e.jpg'
+import styles from './hero.module.css';
+import initialBannerImage from './images/alireza-khajehali-1.jpg';
+import secondBannerImage from './images/sunset-mountain.jpg';
+import thirdBannerImage from './images/snow-mountain-2.jpg';
+import fourthBannerImage from './images/snow-mountain-e.jpg';
 
-const heroData = [
+interface PropsInterface {
+
+}
+
+interface StateInterface {
+    activeBanner: number
+}
+
+interface HeroInterface {
+    image: string,
+    text: string
+}
+
+// We could also use HeroInterface[] here but I find Array<HeroInterface> to be more explicit and consistent.
+// See https://toddmotto.com/typing-arrays-typescript for more methods
+const heroData: Array<HeroInterface> = [
     {
         image: initialBannerImage,
         text: 'Text Goes Here - First Slide'
@@ -23,10 +38,10 @@ const heroData = [
         image: fourthBannerImage,
         text: 'Text Goes Here - Fourth Slide'
     }
-]
+];
 
-class Hero extends Component {
-    constructor(props) {
+class Hero extends Component<PropsInterface, StateInterface> {
+    constructor(props: PropsInterface) {
         super(props);
 
         this.state = {
@@ -70,11 +85,11 @@ class Hero extends Component {
      * Updates the hero
      * @param {string} direction - 'next' or 'previous' - The slide direction.
      */
-    updateHero(direction) {
-        const activeBanner = this.state.activeBanner
-        const heroLength = heroData.length
-        const canDecrement = activeBanner > 0
-        const canIncrement = activeBanner < heroLength - 1 // -1 as length is 0 index based
+    updateHero(direction: string) {
+        const activeBanner = this.state.activeBanner;
+        const heroLength = heroData.length;
+        const canDecrement = activeBanner > 0;
+        const canIncrement = activeBanner < heroLength - 1; // -1 as length is 0 index based
 
         if (direction === 'next' && canIncrement) {
             this.setState((state) => {
@@ -97,7 +112,7 @@ class Hero extends Component {
 
     render() {
         const state = this.state;
-        const activeBanner = state.activeBanner
+        const activeBanner = state.activeBanner;
 
         //@toDo: Tidy up animations, may need to render all slides out
         return (

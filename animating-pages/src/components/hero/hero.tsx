@@ -53,7 +53,7 @@ class Hero extends Component<PropsInterface, StateInterface> {
      * Methods to run once the component has mounted
      */
     componentDidMount() {
-        this.fadeInBanner();
+        Hero.fadeInBanner();
         this.preLoadBannerImages();
     }
 
@@ -68,9 +68,10 @@ class Hero extends Component<PropsInterface, StateInterface> {
     }
 
     /**
-     * Fades in the banner
+     * Fades in the banner.
+     * This is a static method as it remains the same across all instances of this class
      */
-    fadeInBanner() {
+    static fadeInBanner() {
         anime({
             duration: 600,
             easing: 'easeInOutQuad',
@@ -86,10 +87,10 @@ class Hero extends Component<PropsInterface, StateInterface> {
      * @param {string} direction - 'next' or 'previous' - The slide direction.
      */
     updateHero(direction: string) {
-        const activeBanner = this.state.activeBanner;
-        const heroLength = heroData.length;
-        const canDecrement = activeBanner > 0;
-        const canIncrement = activeBanner < heroLength - 1; // -1 as length is 0 index based
+        const activeBanner: number = this.state.activeBanner;
+        const heroLength: number = heroData.length;
+        const canDecrement: boolean = activeBanner > 0;
+        const canIncrement: boolean = activeBanner < heroLength - 1; // -1 as length is 0 index based
 
         if (direction === 'next' && canIncrement) {
             this.setState((state) => {
@@ -107,12 +108,12 @@ class Hero extends Component<PropsInterface, StateInterface> {
             return
         }
 
-        this.fadeInBanner();
+        Hero.fadeInBanner();
     }
 
     render() {
-        const state = this.state;
-        const activeBanner = state.activeBanner;
+        const state: StateInterface = this.state;
+        const activeBanner: number = state.activeBanner;
 
         //@toDo: Tidy up animations, may need to render all slides out
         return (

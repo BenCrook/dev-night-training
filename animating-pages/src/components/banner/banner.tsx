@@ -19,37 +19,28 @@ const animateBanner = () => {
 };
 
 /**
- * Returns true if the banner can be updated, false if it cannot. Supports an optional callback function.
- * @param {string} direction - 'next' or 'previous' - The slide direction.
- * @param {number} activeBanner - The index of the current banner.
- * @param {function} [callback] - An optional callback function, currently updates the active banner.
+ * Returns true if the banner can proceed to the next
+ * @param {number} activeBanner
+ * @returns {boolean}
  */
-const canBannerUpdate = (direction: string, activeBanner: number, callback?: (newBannerIndex: number) => void) => {
-    const bannerLength: number = bannerData.length;
-    const canDecrement: boolean = activeBanner > 0;
-    const canIncrement: boolean = activeBanner < bannerLength - 1; // -1 as arrays are 0 index based
-
-    // todo: Prevent repeated code here
-    if (direction === 'next' && canIncrement) {
-        if (callback) {
-            callback(activeBanner + 1);
-        }
-        return true;
-    } else if (direction === 'previous' && canDecrement) {
-        if (callback) {
-            callback(activeBanner - 1);
-        }
-        return true;
-    }
-
-    return false;
+const canBannerIncrement = (activeBanner: number) => {
+    return activeBanner < bannerData.length - 1;
 };
 
 /**
- * This function will set the banner image but also make a call to preload the next banner image
+ * Returns true if the banner can revert to the previous one
+ * @param {number} activeBanner
+ * @returns {boolean}
+ */
+const canBannerDecrement = (activeBanner: number) => {
+    return activeBanner > 0;
+};
+
+/**
+ * This function will get the banner image but also make a call to preload the next banner image
  * @param {number} activeBanner - The active banner
  */
-const setBannerImage = (activeBanner: number) => {
+const getBannerImage = (activeBanner: number) => {
     const nextBannerIndex = activeBanner + 1;
 
     if (bannerData[nextBannerIndex]) {
@@ -62,21 +53,21 @@ const setBannerImage = (activeBanner: number) => {
 const Banner = () => {
     const [activeBanner, setActiveBanner] = useState(0);
     const valuesToTriggerRender: any[] = [activeBanner];
+    const nextBanner = activeBanner + 1;
+    const prevBanner = activeBanner - 1;
 
     // Re-render only happens if the values inside valuesToTriggerRender change
     useEffect(() => {
         animateBanner();
     }, valuesToTriggerRender);
 
-    // todo: Use React.Context or Redux rather than passing activeBanner through to multiple components
+    // todo: Possibly use React.Context or Redux rather than passing activeBanner through to multiple functions
     // todo: Improve animations, may need to render all slides out for this
-    // todo: Preload the next image on hover rather than automatically?
-    //     Currently we presume the user will change slide, will not always be the case
-    //     Will be less impactful but will still load the image slightly earlier than without
+    // todo: Simply markup (too many unnecessary elements)
     return (
         <div className={`${styles.container}`}>
             <div className={`${styles.image} animation`}
-                 style={{backgroundImage: `url(${setBannerImage(activeBanner)})`}}/>
+                 style={{backgroundImage: `url(${getBannerImage(activeBanner)})`}}/>
             <div className={styles.content}>
                 <div className={styles.text}>
                     {bannerData[activeBanner].text}
@@ -85,10 +76,16 @@ const Banner = () => {
                     <h2>Links Go Here</h2>
                 </div>
                 <div className={styles.arrows}>
-                    <h2 onClick={() => canBannerUpdate('next', activeBanner, setActiveBanner)}
-                        className={`${styles.arrow} ${styles.next}`}>NEXT</h2>
-                    <h2 onClick={() => canBannerUpdate('previous', activeBanner, setActiveBanner)}
-                        className={`${styles.arrow} ${styles.next}`}>PREV</h2>
+                    <h2 className={`${styles.arrow} ${styles.next}`}
+                        onClick={() =>
+                            canBannerIncrement(activeBanner) ? setActiveBanner(nextBanner) : null}>
+                        NEXT
+                    </h2>
+                    <h2 className={`${styles.arrow} ${styles.next}`}
+                        onClick={() =>
+                            canBannerDecrement(activeBanner) ? setActiveBanner(prevBanner) : null}>
+                        PREV
+                    </h2>
                 </div>
             </div>
         </div>

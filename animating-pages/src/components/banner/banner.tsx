@@ -1,52 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import anime from 'animejs';
+import bannerData from '../../data/banners/home/data';
+import { preloadImage } from '../../utilities/preload-image';
 import styles from './banner.module.css';
-import initialBannerImage from './images/alireza-khajehali-1.jpg';
-import secondBannerImage from './images/sunset-mountain.jpg';
-import thirdBannerImage from './images/snow-mountain-2.jpg';
-import fourthBannerImage from './images/snow-mountain-e.jpg';
-
-interface BannerInterface {
-    image: string,
-    text: string
-}
-
-// We could also use Array<BannerInterface> here but I find BannerInterface[] to be more concise.
-// See https://toddmotto.com/typing-arrays-typescript for more methods
-const bannerData: BannerInterface[] = [
-    {
-        image: initialBannerImage,
-        text: 'Text Goes Here - First Slide'
-    },
-    {
-        image: secondBannerImage,
-        text: 'Text Goes Here - Second Slide'
-    },
-    {
-        image: thirdBannerImage,
-        text: 'Text Goes Here - Third Slide'
-    },
-    {
-        image: fourthBannerImage,
-        text: 'Text Goes Here - Fourth Slide'
-    }
-];
-
-/**
- * Preloads specified banner image so there isn't a flash or noticeable load during slides
- * todo: Loads the second image twice? Once as a preload then again as the user enters the second slide
- * todo: Idea for this - Function that loads the image then sets it
- * todo: Split preload functions into their own file
- * todo: Throw error?
- */
-const preloadBannerImage = (bannerIndexToPreload: number) => {
-    // Check image exists else it will error
-    if (bannerData[bannerIndexToPreload]) {
-        console.log(`Preloading ${bannerData[bannerIndexToPreload].image}`);
-        const img = new Image();
-        img.src = bannerData[bannerIndexToPreload].image;
-    }
-};
 
 /**
  * Fades in the banner using anime.js
@@ -89,17 +45,18 @@ const canBannerUpdate = (direction: string, activeBanner: number, callback?: (ne
     return false;
 };
 
-const setBannerImage = (imageSrc: string, activeBanner: number) => {
-    console.log(`Loading ${imageSrc}`);
-    const img = new Image();
-    img.src = imageSrc;
+/**
+ * This function will set the banner image but also make a call to preload the next banner image
+ * @param {number} activeBanner - The active banner
+ */
+const setBannerImage = (activeBanner: number) => {
+    const nextBannerIndex = activeBanner + 1;
 
-    img.onload = function () {
-        console.log(`${imageSrc} HAS LOADED!`);
-        preloadBannerImage(activeBanner + 1);
-    };
+    if (bannerData[nextBannerIndex]) {
+        preloadImage(bannerData[nextBannerIndex].image);
+    }
 
-    return imageSrc;
+    return bannerData[activeBanner].image;
 };
 
 const Banner = () => {
@@ -119,7 +76,7 @@ const Banner = () => {
     return (
         <div className={`${styles.container}`}>
             <div className={`${styles.image} animation`}
-                 style={{backgroundImage: `url(${setBannerImage(bannerData[activeBanner].image, activeBanner)})`}}/>
+                 style={{backgroundImage: `url(${setBannerImage(activeBanner)})`}}/>
             <div className={styles.content}>
                 <div className={styles.text}>
                     {bannerData[activeBanner].text}

@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import anime from 'animejs';
-import styles from './hero.module.css';
+import styles from './banner.module.css';
 import initialBannerImage from './images/alireza-khajehali-1.jpg';
 import secondBannerImage from './images/sunset-mountain.jpg';
 import thirdBannerImage from './images/snow-mountain-2.jpg';
 import fourthBannerImage from './images/snow-mountain-e.jpg';
 
-interface HeroInterface {
+interface BannerInterface {
     image: string,
     text: string
 }
 
-// We could also use Array<HeroInterface> here but I find HeroInterface[] to be more concise.
+// We could also use Array<BannerInterface> here but I find BannerInterface[] to be more concise.
 // See https://toddmotto.com/typing-arrays-typescript for more methods
-const heroData: HeroInterface[] = [
+const bannerData: BannerInterface[] = [
     {
         image: initialBannerImage,
         text: 'Text Goes Here - First Slide'
@@ -34,17 +34,17 @@ const heroData: HeroInterface[] = [
 
 /**
  * Preloads specified banner image so there isn't a flash or noticeable load during slides
- * todo: Only preload the second banner image after the first has loaded.
+ * todo: Loads the second image twice? Once as a preload then again as the user enters the second slide
  * todo: Idea for this - Function that loads the image then sets it
  * todo: Split preload functions into their own file
  * todo: Throw error?
  */
 const preloadBannerImage = (bannerIndexToPreload: number) => {
     // Check image exists else it will error
-    if (heroData[bannerIndexToPreload]) {
-        console.log(`Preloading ${heroData[bannerIndexToPreload].image}`);
+    if (bannerData[bannerIndexToPreload]) {
+        console.log(`Preloading ${bannerData[bannerIndexToPreload].image}`);
         const img = new Image();
-        img.src = heroData[bannerIndexToPreload].image;
+        img.src = bannerData[bannerIndexToPreload].image;
     }
 };
 
@@ -69,9 +69,9 @@ const animateBanner = () => {
  * @param {function} [callback] - An optional callback function, currently updates the active banner.
  */
 const canBannerUpdate = (direction: string, activeBanner: number, callback?: (newBannerIndex: number) => void) => {
-    const heroLength: number = heroData.length;
+    const bannerLength: number = bannerData.length;
     const canDecrement: boolean = activeBanner > 0;
-    const canIncrement: boolean = activeBanner < heroLength - 1; // -1 as arrays are 0 index based
+    const canIncrement: boolean = activeBanner < bannerLength - 1; // -1 as arrays are 0 index based
 
     // todo: Prevent repeated code here
     if (direction === 'next' && canIncrement) {
@@ -102,7 +102,7 @@ const setBannerImage = (imageSrc: string, activeBanner: number) => {
     return imageSrc;
 };
 
-const Hero = () => {
+const Banner = () => {
     const [activeBanner, setActiveBanner] = useState(0);
     const valuesToTriggerRender: any[] = [activeBanner];
 
@@ -119,10 +119,10 @@ const Hero = () => {
     return (
         <div className={`${styles.container}`}>
             <div className={`${styles.image} animation`}
-                 style={{backgroundImage: `url(${setBannerImage(heroData[activeBanner].image, activeBanner)})`}}/>
+                 style={{backgroundImage: `url(${setBannerImage(bannerData[activeBanner].image, activeBanner)})`}}/>
             <div className={styles.content}>
                 <div className={styles.text}>
-                    {heroData[activeBanner].text}
+                    {bannerData[activeBanner].text}
                 </div>
                 <div className={styles.links}>
                     <h2>Links Go Here</h2>
@@ -139,4 +139,4 @@ const Hero = () => {
 };
 
 
-export default Hero;
+export default Banner;
